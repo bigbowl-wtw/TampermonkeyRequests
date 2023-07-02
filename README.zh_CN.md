@@ -10,12 +10,14 @@
 // ==UserScript==
 // @name         My Tampermonkey Script
 // @description  Example script using the library
-// @require      https://your-domain.com/path-to-your-library/my-library.js
+// @require      https://greasyfork.org/scripts/470000-gm-requests/code/GM%20Requests.js?version=1214468
 // ==/UserScript==
 
 requests.get('https://github.com')
 
 ```
+
+确切值可以在 [这里](https://greasyfork.org/zh-CN/scripts/470000) 找到。
 
 ### 在本地代码中使用 `import`
 首先安装 GM Requests：

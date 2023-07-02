@@ -12,12 +12,14 @@ Based on [`GM_xmlHttpRequest`](https://www.tampermonkey.net/documentation.php?lo
 // ==UserScript==
 // @name         My Tampermonkey Script
 // @description  Example script using the library
-// @require      https://your-domain.com/path-to-your-library/my-library.js
+// @require      https://greasyfork.org/scripts/470000-gm-requests/code/GM%20Requests.js?version=1214468
 // ==/UserScript==
 
 requests.get('https://github.com');
 
 ```
+
+The exact value can be found [here](https://greasyfork.org/zh-CN/scripts/470000).
 
 ### Using `import` in local code
 
