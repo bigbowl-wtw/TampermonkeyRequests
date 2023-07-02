@@ -22,12 +22,6 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-  
-    - name: Read version
-      uses: ashley-taylor/read-json-property-action@v1.0
-      with:
-        path: ./package.json
-        property: version
 
     - name: Build
       run: |
