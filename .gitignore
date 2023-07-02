@@ -1,0 +1,7 @@
+.vscode
+.history
+node_modules/
+dist/
+sample
+test
+pnpm-lock.yaml

@@ -1,0 +1,31 @@
+{
+  "name": "gm-requests",
+  "version": "0.0.1",
+  "description": "Imitating Python's Requests library based on GM_xmlHttpRequest.",
+  "author": "大碗宽面wtw",
+  "bugs": {
+    "url": "https://github.com/bigbowl-wtw/gm-requests/issues"
+  },
+  "homepage": "https://github.com/bigbowl-wtw/gm-requests/",
+  "main": "./src/index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --config webpack.config.js"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "@types/tampermonkey": "^4.0.10",
+    "@typescript-eslint/eslint-plugin": "^5.60.1",
+    "@typescript-eslint/parser": "^5.60.1",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^2.8.8",
+    "terser-webpack-plugin": "^5.3.9",
+    "ts-loader": "^9.4.4",
+    "typescript": "^5.1.6",
+    "webpack": "^5.88.1",
+    "webpack-cli": "^5.1.4",
+    "webpack-userscript": "^3.2.2"
+  }
+}
