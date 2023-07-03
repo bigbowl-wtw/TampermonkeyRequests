@@ -1,12 +1,12 @@
 {
   "name": "gm-requests",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Imitating Python's Requests library based on GM_xmlHttpRequest.",
   "author": "大碗宽面wtw",
   "bugs": {
-    "url": "https://github.com/bigbowl-wtw/gm-requests/issues"
+    "url": "https://github.com/bigbowl-wtw/TampermonkeyRequests/issues"
   },
-  "homepage": "https://github.com/bigbowl-wtw/gm-requests/",
+  "homepage": "https://github.com/bigbowl-wtw/TampermonkeyRequests/",
   "main": "./src/index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

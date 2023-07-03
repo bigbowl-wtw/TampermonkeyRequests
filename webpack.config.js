@@ -54,30 +54,19 @@ module.exports = {
                 homepage: _.homepage,
                 description: _.description,
                 grant: ['GM_xmlhttpRequest'],
+                match: 'none',
             },
             pretty: true,
             // strict: false,
         }),
     ],
     optimization: {
-        // 完全禁用压缩(会导致下面的配置项全部失效), 防止在greasyfork上被举报为加密/最小化代码
-        // minimize: false,
         minimizer: [
             new TerserPlugin({
                 parallel: true,
-                // extractComments: true,
+                extractComments: true,
                 terserOptions: {
-                    // 以下四项为禁用代码压缩 + 不压缩标识符
-                    mangle: false,
-                    compress: false,
-                    keep_fnames: true,
-                    keep_classnames: true,
-                    format: {
-                        // 输出格式化, 防止在greasyfork上被举报为最小化代码
-                        beautify: true,
-                        // 删除注释
-                        // comments: true,
-                    },
+                    compress: true,
                 },
             }),
         ],

@@ -1,10 +1,12 @@
-# GM Requests
+# Tampermonkey Requests
 
 [English](./README.zh_CN.md)
 
-基于 [`GM_xmlHttpRequest`](https://www.tampermonkey.net/documentation.php?locale=en#api:GM_xmlhttpRequest) 模仿 Python 的 [Requests](https://requests.readthedocs.io/en/latest/) 库.
+Tampermonkey Requests 库为从 Tampermonkey 脚本中发出 HTTP 请求提供了简化的接口。它受到了流行的 Python 库 [requests](https://requests.readthedocs.io/en/latest/) 的启发，旨在使从 Tampermonkey 脚本发送请求变得更加简单和直观。
 
 ## 如何引入
+注意：包名为 `gm-requests`。
+
 ### 在脚本中使用 `@require` 标签
 ```javascript
 // ==UserScript==

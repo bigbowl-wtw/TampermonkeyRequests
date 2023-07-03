@@ -2,9 +2,10 @@
 
 [中文](./README.zh_CN.md)
 
-Based on [`GM_xmlHttpRequest`](https://www.tampermonkey.net/documentation.php?locale=en#api:GM_xmlhttpRequest), GM Requests is a library that emulates Python's [Requests](https://requests.readthedocs.io/en/latest/) library.
+Tampermonkey Requests is a JavaScript library that provides a simplified interface for making HTTP requests from Tampermonkey scripts. It is inspired by the popular Python library, [requests](https://requests.readthedocs.io/en/latest/), and aims to make sending requests from Tampermonkey scripts easier and more intuitive.
 
 ## How to Import
+The package name is `gm-requests`:)
 
 ### Using `@require` tag in a script
 
