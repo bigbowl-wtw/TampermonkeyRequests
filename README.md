@@ -1,4 +1,4 @@
-# GM Requests
+# Tampermonkey Requests
 
 [中文](./README.zh_CN.md)
 
