@@ -6,10 +6,10 @@ export class Header implements IHeader {
         [header: string]: string | string[];
     };
 
-    cookies: ICookieJar;
+    cookie: ICookieJar;
 
     constructor(headers?: IRequestHeaders) {
-        this.cookies = new SimpleCookieJar();
+        this.cookie = new SimpleCookieJar();
         if (!headers) {
             this.headers = {};
             return;
@@ -17,7 +17,7 @@ export class Header implements IHeader {
         const { cookie, ...others } = headers;
         this.headers = others;
         if (cookie) {
-            this.cookies.update(cookie);
+            this.cookie.update(cookie);
         }
     }
 
@@ -42,33 +42,33 @@ export class Header implements IHeader {
     update(headers: IRequestHeaders): void;
     update(headers: IRequestHeaders | IHeader): void {
         if (isIHeader(headers)) {
-            this.cookies.update(headers.cookies);
+            this.cookie.update(headers.cookie);
             this.update(headers.headers);
         } else {
             const { cookie, ...others } = headers ?? {};
             assign(this.headers, others);
             if (cookie) {
-                this.cookies.update(cookie as any);
+                this.cookie.update(cookie as any);
             }
         }
     }
 
     getHeaders(): Tampermonkey.RequestHeaders {
         if (!Object.keys(this.headers).length) {
-            if (this.cookies.empty) return {};
-            return { cookie: this.cookies.toString() };
+            if (this.cookie.empty) return {};
+            return { cookie: this.cookie.toString() };
         }
         const headers: { [header: string]: string } = {};
         for (const [name, value] of Object.entries(this.headers))
             headers[name] = value.toString();
         return {
             ...headers,
-            cookie: this.cookies.toString(),
+            cookie: this.cookie.toString(),
         };
     }
 
     append(header: string, value: string | string[]): void {
-        if (header === 'cookie') this.cookies.update([header]);
+        if (header === 'cookie') this.cookie.update([header]);
         else if (!this[header]) this[header] = value;
         else if (!Array.isArray(header))
             this[header] = [value].concat(this[header]);

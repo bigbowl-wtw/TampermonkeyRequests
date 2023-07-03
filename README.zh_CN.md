@@ -12,7 +12,7 @@ Tampermonkey Requests 库为从 Tampermonkey 脚本中发出 HTTP 请求提供�
 // ==UserScript==
 // @name         My Tampermonkey Script
 // @description  Example script using the library
-// @require      https://greasyfork.org/scripts/470000-gm-requests/code/GM%20Requests.js
+// @require      https://greasyfork.org/scripts/470000/code/GM%20Requests.js
 // ==/UserScript==
 
 requests.get('https://github.com')
@@ -24,7 +24,7 @@ requests.get('https://github.com')
 ### 在本地代码中使用 `import`
 首先安装 GM Requests：
 ```base
-npm install https://github.com/bigbowl-wtw/GM-Requests.git
+npm install https://github.com/bigbowl-wtw/TampermonkeyRequests.git
 ```
 在代码中导入：
 ```javascript
@@ -56,12 +56,12 @@ requests.get<TResolve = any, TContext = object>(
 
 `query`：要发出的查询参数。
 
-`options`：透传到 [`GM_xmlHttpRequest`](https://www.tampermonkey.net/documentation.php?locale=en#api:GM_xmlhttpRequest) 的参数，但不包括 `url`、`method`、`headers`、`cookies`。
+`options`：透传到 [`GM_xmlHttpRequest`](https://www.tampermonkey.net/documentation.php?locale=en#api:GM_xmlhttpRequest) 的参数，但不包括 `url`、`method`、`headers`、`cookie`。
 
 ### `requests.post`
 ```typescript
 let ret = await requests.post(
-    'https://httpbin.org/get',
+    'https://httpbin.org/post',
     {
         data: { foo: 'bar' }
         responseType: 'json'
@@ -80,13 +80,15 @@ requests.post<TResolve = any, TContext = object>(
 
 `options`：
 - `json?: any`：任何可以被转换为 JSON 字符串的对象
-- `data: { [key: string]: string }`：以 `'application/x-www-form-urlencoded'` 发出的数据，值将使用 ureencoded 编码。
-- 其他可以透传到 [`GM_xmlHttpRequest`](https://www.tampermonkey.net/documentation.php?locale=en#api:GM_xmlhttpRequest) 的参数，但不包括 `url`、`method`、`headers`、`cookies`。
+- `data: { [key: string]: string }`：以 `'application/x-www-form-urlencoded'` 发出的数据，值将使用 urlencoded 编码。
+- 其他可以透传到 [`GM_xmlHttpRequest`](https://www.tampermonkey.net/documentation.php?locale=en#api:GM_xmlhttpRequest) 的参数，但不包括 `url`、`method`、`headers`、`cookie`。
 
 `json` 和 `data` 只在 `post` 中才其作用。
 
-### 如何使用 headers 和 cookies
-与 requests 相似，`requests.get`、`requests.post` 可以通过在 `options` 中指定 `headers` 或 `cookies` 而发出带这些参数的请求。
+### 如何使用 headers 和 cookie
+与 requests 相似，`requests.get`、`requests.post` 可以通过在 `options` 中指定 `headers` 或 `cookie` 而发出带这些参数的请求。
+
+注意：与 requests 的接口不同，所有传入的 `options` 和内部接口中均使用 `headers` 代表标头，使用 `cookie` 代表 cookie（包括 `headers.cookie`）。这是为了防止习惯 `GM_xmlHttpRequest` 的使用者传入 `cookie` 时不起作用。如果为了与 requests 相同，传入 cookie 的接口定为 `cookies`，就会发生这样的错误。
 
 #### 1. `cookies`：
 ```typescript
@@ -110,7 +112,7 @@ Cookies: ICookieSet
 
 #### 2. `headers`
 ```typescript
-requests.get('https://httpbin/get', { cookies: { foo: 'bar' } })
+requests.get('https://httpbin/get', { headers: { foo: 'bar' } })
 ```
 以上用法将会产生如下标头：
 ```text/plain
@@ -142,10 +144,11 @@ session.headers.update({ foo: 'com.github.bigbowl-wtw/gm-requests' });
 session.headers.append('foo', 'bar');
 
 session.cookies = { test: 'A' };
+// cookie 将被更新为 { test: 'B' }
 session.cookie.update({ test: 'B' });
 ```
 
-当传入的标头包含 cookie 时，`Session.cookies` 将被更新（而不是 `Session.headers.cookie`）。
+当传入的标头包含 cookie 时，`Session.cookie` 将被更新（而不是 `Session.headers.cookie`）。
 
 ### `requests.session`
 `requests.session` 用来返回一个 `Session` 实例（与 requests 完全相同）。

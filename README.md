@@ -13,7 +13,7 @@ The package name is `gm-requests`:)
 // ==UserScript==
 // @name         My Tampermonkey Script
 // @description  Example script using the library
-// @require      https://greasyfork.org/scripts/470000-gm-requests/code/GM%20Requests.js
+// @require      https://greasyfork.org/scripts/470000/code/GM%20Requests.js
 // ==/UserScript==
 
 requests.get('https://github.com');
@@ -27,7 +27,7 @@ If you want to reference a specific version, you can find the exact value of the
 First, install GM Requests:
 
 ```base
-npm install https://github.com/bigbowl-wtw/GM-Requests.git
+npm install https://github.com/bigbowl-wtw/TampermonkeyRequests.git
 ```
 
 Import in your code:
@@ -64,13 +64,13 @@ requests.get<TResolve = any, TContext = object>(
 
 `query`: Query parameters to be sent.
 
-`options`: Parameters passed to [`GM_xmlHttpRequest`](https://www.tampermonkey.net/documentation.php?locale=en#api:GM_xmlhttpRequest), excluding `url`, `method`, `headers`, and `cookies`.
+`options`: Parameters passed to [`GM_xmlHttpRequest`](https://www.tampermonkey.net/documentation.php?locale=en#api:GM_xmlhttpRequest), excluding `url`, `method`, `headers`, and `cookie`.
 
 ### `requests.post`
 
 ```typescript
 let ret = await requests.post(
-    'https://httpbin.org/get',
+    'https://httpbin.org/post',
     {
         data: { foo: 'bar' },
         responseType: 'json'
@@ -92,18 +92,20 @@ requests.post<TResolve = any, TContext = object>(
 `options`:
 - `json?: any`: An object that can be converted to a JSON string.
 - `data: { [key: string]: string }`: Data sent with `'application/x-www-form-urlencoded'` encoding.
-- Other parameters that can be passed to [`GM_xmlHttpRequest`](https://www.tampermonkey.net/documentation.php?locale=en#api:GM_xmlhttpRequest), excluding `url`, `method`, `headers`, and `cookies`.
+- Other parameters that can be passed to [`GM_xmlHttpRequest`](https://www.tampermonkey.net/documentation.php?locale=en#api:GM_xmlhttpRequest), excluding `url`, `method`, `headers`, and `cookie`.
 
 `json` and `data` only have an effect in `post` requests.
 
-### How to Use Headers and Cookies
+### How to Use Headers and Cookie
 
-Similar to requests, `requests.get` and `requests.post` can send requests with specified `headers` or `cookies` by including them in the `options`.
+Similar to requests, `requests.get` and `requests.post` can send requests with specified `headers` or `cookie` by including them in the `options`.
 
-#### 1. `cookies`:
+Note: Unlike the interface of requests, in all passed `options` and internal interfaces, the `headers` parameter is used to represent headers, and `cookie` is used to represent cookies (including `headers.cookie`). This is to prevent users accustomed to `GM_xmlHttpRequest` from encountering issues where the passed `cookie` parameter doesn't work. if the cookie parameter is defined as `cookies` to match requests, such errors would occur.
+
+#### 1. `cookie`:
 
 ```typescript
-requests.get('https://httpbin/get', { cookies: { foo: 'bar' } });
+requests.get('https://httpbin/get', { cookie: { foo: 'bar' } });
 ```
 
 The above usage will generate the following cookie:
@@ -129,7 +131,7 @@ All cookies set via `cookies` will be appended after the cookies managed by the 
 #### 2. `headers`:
 
 ```typescript
-requests.get('https://httpbin/get', { cookies: { foo: 'bar' } });
+requests.get('https://httpbin/get', { headers: { foo: 'bar' } });
 ```
 
 The above usage will generate the following header:
@@ -150,9 +152,9 @@ headers: {
 }
 ```
 
-#### 3. Priority of `headers.cookie` and `cookies`
+#### 3. Priority of `headers.cookie` and `cookie`
 
-According to the behavior of [`GM_xmlHttpRequest`](https://www.tampermonkey.net/documentation.php?locale=en#api:GM_xmlhttpRequest), the priority is `headers.cookie` `>` `cookies`, and this library follows the same behavior.
+According to the behavior of [`GM_xmlHttpRequest`](https://www.tampermonkey.net/documentation.php?locale=en#api:GM_xmlhttpRequest), the priority is `headers.cookie` `>` `cookie`, and this library follows the same behavior.
 
 ## Using `Session`
 
@@ -168,10 +170,11 @@ session.headers.update({ foo: 'com.github.bigbowl-wtw/gm-requests' });
 session.headers.append('foo', 'bar');
 
 session.cookies = { test: 'A' };
+// cookie will be updated to { test: 'B' }
 session.cookie.update({ test: 'B' });
 ```
 
-When headers contain cookies, `Session.cookies` will be updated (not `Session.headers.cookie`).
+When headers contain cookie, `Session.cookie` will be updated (not `Session.headers.cookie`).
 
 ### `requests.session`
 

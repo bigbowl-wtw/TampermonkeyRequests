@@ -4,10 +4,10 @@ type CookieTuple = [string, string];
 
 export class SimpleCookieJar implements ICookieJar {
     get empty(): boolean {
-        return !Object.keys(this.cookies).length;
+        return !Object.keys(this.cookie).length;
     }
 
-    cookies: ICookieSet;
+    cookie: ICookieSet;
     private never: Set<string> = new Set();
 
     constructor(cookies?: ICookieSet | ICookieJar) {
@@ -18,7 +18,7 @@ export class SimpleCookieJar implements ICookieJar {
     update(cookies: string[]): void;
     update(cookies: ICookieJar): void;
     update(cookies: ICookieSet | string[] | ICookieJar): void {
-        assign(this.cookies, this.normalizeCookie(cookies));
+        assign(this.cookie, this.normalizeCookie(cookies));
     }
 
     updateFromString(cookieStringArray: string | string[]) {
@@ -36,9 +36,9 @@ export class SimpleCookieJar implements ICookieJar {
             cookieEntries = cookies.map(this.stringToEntry);
         else
             cookieEntries = Object.entries(
-                isCookieJar(cookies) ? cookies.cookies : cookies
+                isCookieJar(cookies) ? cookies.cookie : cookies
             );
-        const set = new Set(Object.keys(this.cookies));
+        const set = new Set(Object.keys(this.cookie));
         cookieEntries = cookieEntries.filter(([name]) => !set.has(name));
         this.update(Object.fromEntries(cookieEntries));
     }
@@ -56,7 +56,7 @@ export class SimpleCookieJar implements ICookieJar {
 
         names.forEach(name => {
             this.never.add(name);
-            delete this.cookies[name];
+            delete this.cookie[name];
         });
     }
 
@@ -84,7 +84,7 @@ export class SimpleCookieJar implements ICookieJar {
     setCookies(cookies: ICookieSet): void;
     setCookies(cookies: ICookieJar): void;
     setCookies(cookies: string[] | ICookieSet | ICookieJar) {
-        this.cookies = new Proxy(this.normalizeCookie(cookies), {
+        this.cookie = new Proxy(this.normalizeCookie(cookies), {
             set: (target, name: string, value: string) => {
                 if (this.never.has(name)) return true;
                 target[name] = value;
@@ -94,7 +94,7 @@ export class SimpleCookieJar implements ICookieJar {
     }
 
     toString(): string {
-        return Object.entries(this.cookies)
+        return Object.entries(this.cookie)
             .map(([k, v]) => `${k}=${v}`)
             .join(';');
     }
@@ -107,7 +107,7 @@ export class SimpleCookieJar implements ICookieJar {
         cookies: ICookieSet | string[] | ICookieJar
     ): ICookieSet {
         if (Array.isArray(cookies)) return this.parseCookieString(cookies);
-        if (isCookieJar(cookies)) return cookies.cookies;
+        if (isCookieJar(cookies)) return cookies.cookie;
         return cookies;
     }
 

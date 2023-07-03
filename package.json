@@ -1,7 +1,7 @@
 {
   "name": "gm-requests",
-  "version": "0.0.3",
-  "description": "Imitating Python's Requests library based on GM_xmlHttpRequest.",
+  "version": "0.0.4",
+  "description": "Simplified HTTP requests for Tampermonkey scripts.",
   "author": "大碗宽面wtw",
   "bugs": {
     "url": "https://github.com/bigbowl-wtw/TampermonkeyRequests/issues"

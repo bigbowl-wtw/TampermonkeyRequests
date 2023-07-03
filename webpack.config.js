@@ -5,7 +5,7 @@ const path = require('path');
 const _ = require('./package.json');
 // const nodeExternals = require("webpack-node-externals");
 
-_.name = 'GM Requests';
+_.name = 'Tampermonkey Requests';
 
 module.exports = {
     mode: 'production',
@@ -15,7 +15,7 @@ module.exports = {
         extensions: ['.js', '.ts', '.tsx'],
     },
     output: {
-        filename: `${_.name.replace(' ', '-').toLowerCase()}.js`,
+        filename: 'gm-requests.js',
         path: path.resolve(__dirname, 'dist'),
         library: {
             name: 'requests',

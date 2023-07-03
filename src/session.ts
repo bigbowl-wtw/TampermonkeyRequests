@@ -72,9 +72,9 @@ class Details<TContext = object> implements IDetails<TContext> {
      * Cookie 优先级：this.header.cookie > this.cookie > session.cookie（与 GM_xhr 保持一致）
      */
     buildHeaderAndCookie(session: Session): this {
-        const finalCookie = this.finalHeader.cookies;
+        const finalCookie = this.finalHeader.cookie;
         // 处理 cookie
-        if (!session.cookies.empty) finalCookie.update(session.cookies);
+        if (!session.cookie.empty) finalCookie.update(session.cookie);
         if (this.cookie) finalCookie.update(this.cookie);
         // 处理 header
         this.finalHeader.update(session.headers);
@@ -145,7 +145,7 @@ class Details<TContext = object> implements IDetails<TContext> {
 
 export default class Session implements ISession {
     headers: IHeader;
-    cookies: ICookieJar;
+    cookie: ICookieJar;
 
     auth?: IAuth;
 
@@ -162,11 +162,11 @@ export default class Session implements ISession {
             },
         });
 
-        // define this.cookies
-        Object.defineProperty(this, 'cookies', {
-            get: () => headers.cookies,
+        // define this.cookie
+        Object.defineProperty(this, 'cookie', {
+            get: () => headers.cookie,
             set(value: ICookieSet) {
-                headers.cookies.setCookies(value);
+                headers.cookie.setCookies(value);
             },
         });
     }
@@ -195,13 +195,11 @@ export default class Session implements ISession {
             if (!options.onload) {
                 details.others.onload = resp => {
                     // update cookie from response
-                    if (!this.cookies.empty) {
+                    if (!this.cookie.empty) {
                         const respHeaders = new Header().setFromString(
                             resp.responseHeaders
                         );
-                        this.cookies.deleteFromString(
-                            respHeaders['set-cookie']
-                        );
+                        this.cookie.deleteFromString(respHeaders['set-cookie']);
                     }
 
                     if (resp.status === 200 && !(resp.status in ErrorStatus))

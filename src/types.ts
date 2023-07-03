@@ -109,18 +109,18 @@ interface IAuth {
 }
 
 interface ICookieJar {
-    cookies: ICookieSet;
+    cookie: ICookieSet;
     get empty(): boolean;
-    update(cookies: ICookieJar): void;
-    update(cookies: ICookieSet): void;
-    update(cookies: string[]): void;
+    update(cookie: ICookieJar): void;
+    update(cookie: ICookieSet): void;
+    update(cookie: string[]): void;
     updateFromString(cookieStringArray: string | string[]): void;
     setCookies(cookieStringArray: string[]): void;
-    setCookies(cookies: ICookieSet): void;
-    setCookies(cookies: ICookieJar): void;
-    differenceUpdate(cookies: ICookieJar): void;
-    differenceUpdate(cookies: ICookieSet): void;
-    differenceUpdate(cookies: string[]): void;
+    setCookies(cookie: ICookieSet): void;
+    setCookies(cookie: ICookieJar): void;
+    differenceUpdate(cookie: ICookieJar): void;
+    differenceUpdate(cookie: ICookieSet): void;
+    differenceUpdate(cookie: string[]): void;
     deleteFromString(cookieStringArray: string | string[]): void;
     parseCookieString(cookieStrings: string[]): ICookieSet;
     toString(): string;
@@ -130,7 +130,7 @@ type IHeader = {
     headers: {
         [header: string]: string | string[];
     };
-    cookies: ICookieJar;
+    cookie: ICookieJar;
     setFromString(headers: string): ThisType<IHeader>;
     update(headers: IHeader): void;
     update(headers: IRequestHeaders): void;
@@ -150,7 +150,7 @@ interface IDetails<TContext = object> {
 
 interface ISession {
     headers: IHeader;
-    cookies: ICookieJar;
+    cookie: ICookieJar;
 
     auth?: IAuth;
 
