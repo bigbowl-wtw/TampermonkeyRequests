@@ -114,19 +114,19 @@ The above usage will generate the following cookie:
 Cookie: foo=bar;
 ```
 
-`cookies` is an object with string values, where the keys are the cookie names and the values are the cookie values:
+`cookie` is an object with string values, where the keys are the cookie names and the values are the cookie values:
 
 ```typescript
 type ICookieSet = {
     [name: string]: string;
 };
 
-Cookies: ICookieSet
+cookie: ICookieSet
 ```
 
 The same cookie cannot have multiple values.
 
-All cookies set via `cookies` will be appended after the cookies managed by the browser, as determined by [`GM_xmlHttpRequest`](https://www.tampermonkey.net/documentation.php?locale=en#api:GM_xmlhttpRequest).
+All cookies set via `cookie` will be appended after the cookies managed by the browser, as determined by [`GM_xmlHttpRequest`](https://www.tampermonkey.net/documentation.php?locale=en#api:GM_xmlhttpRequest).
 
 #### 2. `headers`:
 
@@ -157,8 +157,13 @@ headers: {
 According to the behavior of [`GM_xmlHttpRequest`](https://www.tampermonkey.net/documentation.php?locale=en#api:GM_xmlhttpRequest), the priority is `headers.cookie` `>` `cookie`, and this library follows the same behavior.
 
 ## Using `Session`
+`Session` is currently not fully implemented, please use it with caution.
+
+For the current implementation, it is recommended to use different `Session` instances for requests to different domains. Avoid using an instance from domain A to make requests to domain B, as this may result in errors such as sending incorrect headers and cookies.
 
 Similar to requests, `Session` is used to maintain custom cookies across requests. However, cookies set in the server response via the `Set-Cookie` header will be managed by the browser, and `Session` will not handle them. It will mark and delete them, and if the same named cookie is passed again in future requests, `Session` will ignore them.
+
+`Session.cookie` and `Session.headers.cookie` mimic the behavior of the corresponding interfaces in requests. You can assign them values using an object or update them using `.update`.
 
 ```typescript
 let session = new requests.Session();
@@ -169,12 +174,18 @@ session.headers.update({ foo: 'com.github.bigbowl-wtw/gm-requests' });
 // header will be updated to { foo: [ 'com.github.bigbowl-wtw/gm-requests', 'bar' ]}
 session.headers.append('foo', 'bar');
 
-session.cookies = { test: 'A' };
+session.cookie = { test: 'A' };
 // cookie will be updated to { test: 'B' }
 session.cookie.update({ test: 'B' });
 ```
 
-When headers contain cookie, `Session.cookie` will be updated (not `Session.headers.cookie`).
+When a header containing a cookie is passed, `Session.cookie` and `Session.headers.cookie` will be updated together. In fact, `Session.cookie` is a reference to `Session.headers.cookie`.
+
+### `.update`
+Both the `headers` and `cookie` objects have an `.update` method, which updates the internal data with the provided values. Existing values will be overwritten by the new values.
+
+### `headers.append(header: string, value: string | string[])`
+Since HTTP headers allow multiple values for the same key, `headers` provides the `append` method to add new values to a single header.  If the passed header is a cookie, the cookie will be updated accordingly.
 
 ### `requests.session`
 

@@ -98,17 +98,17 @@ requests.get('https://httpbin/get', { cookie: { foo: 'bar' } })
 ```text/plain
 Cookie: foo=bar;
 ```
-`cookies` 是一个值类型为 `string` 的对象，键为 cookie 名，值为 cookie 的值：
+`cookie` 是一个值类型为 `string` 的对象，键为 cookie 名，值为 cookie 的值：
 ```typescript
 type ICookieSet = {
     [name: string]: string;
 };
 
-Cookies: ICookieSet
+cookie: ICookieSet
 ```
 同一个 cookie 不能设置多个值。
 
-所有通过 cookies 设置的 cookie 将会附加在浏览器管理的 cookie 之后，这是 [`GM_xmlHttpRequest`](https://www.tampermonkey.net/documentation.php?locale=en#api:GM_xmlhttpRequest) 的特性决定的。 
+所有通过 `cookie` 设置的 cookie 将会附加在浏览器管理的 cookie 之后，这是 [`GM_xmlHttpRequest`](https://www.tampermonkey.net/documentation.php?locale=en#api:GM_xmlhttpRequest) 的特性决定的。 
 
 #### 2. `headers`
 ```typescript
@@ -129,11 +129,19 @@ headers: {
 }
 ```
 
-#### 3. `headers.cookie` 和 `cookies` 的优先级
-根据 [`GM_xmlHttpRequest`](https://www.tampermonkey.net/documentation.php?locale=en#api:GM_xmlhttpRequest) 的特性，两者的优先级 `headers.cookie` `>` `cookies`，本库将与之保持一致。
+#### 3. `headers.cookie` 和 `cookie` 的优先级
+根据 [`GM_xmlHttpRequest`](https://www.tampermonkey.net/documentation.php?locale=en#api:GM_xmlhttpRequest) 的特性，两者的优先级 `headers.cookie` `>` `cookie`，本库将与之保持一致。
 
 ## 使用 `Session`
+
+`Session` 目前尚不完善，请谨慎使用。
+
+对于当前的实现来说，建议对不同域的请求使用不同的 `Session` 实例，不要使用 A 域的实例进行 B 域的请求，这样可能会导致一些错误，比如发出错误的 header 和 cookie。
+
 与 requests 相似，`Session` 用来跨请求保持自定义 cookie。但服务器响应中通过 `Set-Cookie` 标头设定的 cookie 将交给浏览器管理，`Session` 不会管理它们，并且会将其标记和删除，在以后的请求中，如果又传入了同名的 cookie，`Session` 将忽略它们。
+
+`Session.cookie` 和 `Session.headers.cookie` 模仿了 requests 对应接口的行为，你可以用一个对象为它们赋值，也可以使用 `.update` 进行更新。
+
 ```typescript
 let session = new requests.Session();
 
@@ -143,12 +151,18 @@ session.headers.update({ foo: 'com.github.bigbowl-wtw/gm-requests' });
 // header 被更新为 { foo: [ 'com.github.bigbowl-wtw/gm-requests', 'bar' ]}
 session.headers.append('foo', 'bar');
 
-session.cookies = { test: 'A' };
+session.cookie = { test: 'A' };
 // cookie 将被更新为 { test: 'B' }
 session.cookie.update({ test: 'B' });
 ```
 
-当传入的标头包含 cookie 时，`Session.cookie` 将被更新（而不是 `Session.headers.cookie`）。
+当传入的标头包含 cookie 时，`Session.cookie` 和 `Session.headers.cookie` 将被一起更新。，事实上 `Session.cookie` 是 `Session.headers.cookie` 的一个引用。
+
+### `.update`
+`headers` 和 `cookie` 对象都有 `.update` 方法，该方法使用传入值更新内部数据，已存在的值会用新值覆盖。
+
+### `headers.append(header: string, value: string | string[])`
+由于 HTTP 标头允许同一个键有多值存在，因此 `headers` 提供 `append` 方法用来对单个 header 添加新值。如果传入的标头是 cookie，将会对 cookie 进行相应的更新。
 
 ### `requests.session`
 `requests.session` 用来返回一个 `Session` 实例（与 requests 完全相同）。
