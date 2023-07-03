@@ -18,7 +18,7 @@ class Details<TContext = object> implements IDetails<TContext> {
     private finalHeader?: IHeader;
     private finalData?: string | FormData;
 
-    private pendings: (any | Promise<any>)[];
+    private pendings: (any | Promise<any>)[] = [];
 
     constructor(url: Url, method: Method, options?: Options<TContext>) {
         this.url = url;
@@ -72,9 +72,9 @@ class Details<TContext = object> implements IDetails<TContext> {
      * Cookie 优先级：this.header.cookie > this.cookie > session.cookie（与 GM_xhr 保持一致）
      */
     buildHeaderAndCookie(session: Session): this {
-        const finalCookie = this.finalHeader.cookie;
+        const finalCookie = this.finalHeader.cookies;
         // 处理 cookie
-        if (session.cookies) finalCookie.update(session.cookies);
+        if (!session.cookies.empty) finalCookie.update(session.cookies);
         if (this.cookie) finalCookie.update(this.cookie);
         // 处理 header
         this.finalHeader.update(session.headers);
@@ -92,15 +92,19 @@ class Details<TContext = object> implements IDetails<TContext> {
     buildBody(): this {
         if (this.json) {
             const contentType = 'application/json';
-            this.headers['Content-Type'] = contentType;
+            this.finalHeader.update({ 'Content-Type': contentType });
             const data = JSON.stringify(this.json);
             this.finalData = data;
             return this;
         }
         if (this.data) {
+            if (typeof this.data === 'string') {
+                this.finalData = this.data;
+                return this;
+            }
             if (this.data instanceof FormData) return this;
             const contentType = 'application/x-www-form-urlencoded';
-            this.headers['Content-Type'] = contentType;
+            this.finalHeader.update({ 'Content-Type': contentType });
             this.finalData = bodyToString(this.data);
             return this;
         }
@@ -154,15 +158,15 @@ export default class Session implements ISession {
         Object.defineProperty(this, 'headers', {
             get: () => headers,
             set(value: ICookieSet) {
-                headers.cookie.setCookies(value);
+                headers.update(value);
             },
         });
 
         // define this.cookies
         Object.defineProperty(this, 'cookies', {
-            get: () => this.headers.cookie,
+            get: () => headers.cookies,
             set(value: ICookieSet) {
-                this.headers.cookie.setCookies(value);
+                headers.cookies.setCookies(value);
             },
         });
     }
@@ -200,7 +204,7 @@ export default class Session implements ISession {
                         );
                     }
 
-                    if (resp.status === 200 && resp.status in ErrorStatus)
+                    if (resp.status === 200 && !(resp.status in ErrorStatus))
                         resolve(options?.responseType ? resp.response : resp);
                     else reject(resp);
                 };

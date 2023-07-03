@@ -6,15 +6,18 @@ export class Header implements IHeader {
         [header: string]: string | string[];
     };
 
-    cookie: ICookieJar;
+    cookies: ICookieJar;
 
     constructor(headers?: IRequestHeaders) {
-        this.cookie = new SimpleCookieJar();
-        if (!headers) return;
+        this.cookies = new SimpleCookieJar();
+        if (!headers) {
+            this.headers = {};
+            return;
+        }
         const { cookie, ...others } = headers;
         this.headers = others;
         if (cookie) {
-            this.cookie.update(cookie);
+            this.cookies.update(cookie);
         }
     }
 
@@ -38,29 +41,34 @@ export class Header implements IHeader {
     update(headers: IHeader): void;
     update(headers: IRequestHeaders): void;
     update(headers: IRequestHeaders | IHeader): void {
-        const { cookie, ...others } = headers;
-        assign(this.headers, others);
-        if (cookie) {
-            this.cookie.update(cookie as any);
+        if (isIHeader(headers)) {
+            this.cookies.update(headers.cookies);
+            this.update(headers.headers);
+        } else {
+            const { cookie, ...others } = headers ?? {};
+            assign(this.headers, others);
+            if (cookie) {
+                this.cookies.update(cookie as any);
+            }
         }
     }
 
     getHeaders(): Tampermonkey.RequestHeaders {
         if (!Object.keys(this.headers).length) {
-            if (this.cookie.empty) return {};
-            return { cookie: this.cookie.toString() };
+            if (this.cookies.empty) return {};
+            return { cookie: this.cookies.toString() };
         }
         const headers: { [header: string]: string } = {};
         for (const [name, value] of Object.entries(this.headers))
             headers[name] = value.toString();
         return {
             ...headers,
-            cookie: this.cookie.toString(),
+            cookie: this.cookies.toString(),
         };
     }
 
     append(header: string, value: string | string[]): void {
-        if (header === 'cookie') this.cookie.update([header]);
+        if (header === 'cookie') this.cookies.update([header]);
         else if (!this[header]) this[header] = value;
         else if (!Array.isArray(header))
             this[header] = [value].concat(this[header]);
@@ -70,4 +78,8 @@ export class Header implements IHeader {
     get(name: string): string | string[] | undefined {
         return this.headers[name];
     }
+}
+
+function isIHeader(obj: any): obj is IHeader {
+    return typeof obj.update === 'function';
 }

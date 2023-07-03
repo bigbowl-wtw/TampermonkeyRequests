@@ -93,11 +93,11 @@ export class SimpleCookieJar implements ICookieJar {
         });
     }
 
-    // toString(): string {
-    //     return Object.entries(this.cookies)
-    //         .map(([k, v]) => `${k}=${v}`)
-    //         .join(';');
-    // }
+    toString(): string {
+        return Object.entries(this.cookies)
+            .map(([k, v]) => `${k}=${v}`)
+            .join(';');
+    }
 
     parseCookieString(cookieStrings: string[]): ICookieSet {
         return Object.fromEntries(cookieStrings.map(this.stringToEntry));

@@ -24,12 +24,9 @@ export function assignDeepCopy<T>(target: T, ...rest: T[]): T {
 }
 
 export function bodyToString(data: any) {
-    if (Object.values(data).some(v => !(typeof v in ['string', 'number'])))
-        throw new TypeError('value must be `string` or `number`');
+    if (Object.values(data).some(v => typeof v.toString !== 'function'))
+        throw new TypeError('value must has `.toString`');
     return Object.entries(data)
-        .map(
-            ([key, value]) =>
-                `${key}=${encodeURIComponent(value as string | number)}`
-        )
+        .map(([key, value]) => `${key}=${encodeURIComponent(value.toString())}`)
         .join('&');
 }

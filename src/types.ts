@@ -13,6 +13,7 @@ interface Query {
 
 interface Body {
     [key: string]: any;
+    toString(): string;
 }
 
 type PostData = string | FormData | Body;
@@ -129,7 +130,7 @@ type IHeader = {
     headers: {
         [header: string]: string | string[];
     };
-    cookie: ICookieJar;
+    cookies: ICookieJar;
     setFromString(headers: string): ThisType<IHeader>;
     update(headers: IHeader): void;
     update(headers: IRequestHeaders): void;

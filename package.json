@@ -1,6 +1,6 @@
 {
   "name": "gm-requests",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Imitating Python's Requests library based on GM_xmlHttpRequest.",
   "author": "大碗宽面wtw",
   "bugs": {
