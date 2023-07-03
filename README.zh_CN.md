@@ -90,9 +90,9 @@ requests.post<TResolve = any, TContext = object>(
 
 注意：与 requests 的接口不同，所有传入的 `options` 和内部接口中均使用 `headers` 代表标头，使用 `cookie` 代表 cookie（包括 `headers.cookie`）。这是为了防止习惯 `GM_xmlHttpRequest` 的使用者传入 `cookie` 时不起作用。如果为了与 requests 相同，传入 cookie 的接口定为 `cookies`，就会发生这样的错误。
 
-#### 1. `cookies`：
+#### 1. `cookie`：
 ```typescript
-requests.get('https://httpbin/get', { cookies: { foo: 'bar' } })
+requests.get('https://httpbin/get', { cookie: { foo: 'bar' } })
 ```
 以上用法将会产生如下 cookie：
 ```text/plain
