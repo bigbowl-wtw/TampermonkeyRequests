@@ -1,5 +1,20 @@
 import { ErrorStatus } from './errorStatus';
 import { Header } from './header';
+import type {
+    IDetails,
+    Url,
+    Method,
+    Query,
+    PostData,
+    ICookieSet,
+    IAuth,
+    IRequestHeaders,
+    Options,
+    IHeader,
+    ISession,
+    ICookieJar,
+    BuildHook,
+} from './types';
 import { bodyToString } from './utils';
 
 type Keys = 'query' | 'json' | 'data' | 'cookie' | 'auth' | 'headers';

@@ -4,29 +4,34 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import Session from './session';
+import type { Url, Query, Options } from './types';
 
-export function get<TResolve = any, TContext = object>(
-    url: Url,
-    query?: Query,
-    options?: Options<TContext>
-) {
-    return new Session().get<TResolve, TContext>(url, {
-        query,
-        ...options,
-    });
-}
+const requests = {
+    get<TResolve = any, TContext = object>(
+        url: Url,
+        query?: Query,
+        options?: Options<TContext>
+    ) {
+        return new Session().get<TResolve, TContext>(url, {
+            query,
+            ...options,
+        });
+    },
 
-export function post<TResolve = any, TContext = object>(
-    url: Url,
-    options?: Options<TContext>
-) {
-    return new Session().post<TResolve, TContext>(url, {
-        ...options,
-    });
-}
+    post<TResolve = any, TContext = object>(
+        url: Url,
+        options?: Options<TContext>
+    ) {
+        return new Session().post<TResolve, TContext>(url, {
+            ...options,
+        });
+    },
 
-export function session() {
-    return new Session();
-}
+    session() {
+        return new Session();
+    },
+};
+
+export default requests;
 
 export { Session };

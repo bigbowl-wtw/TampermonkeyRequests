@@ -1,29 +1,29 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-type Url = string | URL;
+export type Url = string | URL;
 
-type Method = 'GET' | 'POST';
+export type Method = 'GET' | 'POST';
 
-interface ToStringable {
+export interface ToStringable {
     toString: () => string;
 }
 
-interface Query {
+export interface Query {
     [key: string]: string | number | string[];
 }
 
-interface Body {
+export interface Body {
     [key: string]: any;
     toString(): string;
 }
 
-type PostData = string | FormData | Body;
+export type PostData = string | FormData | Body;
 
-interface Data {
+export interface Data {
     query?: Query;
     body?: Body;
 }
 
-interface Options<TContext = object> {
+export interface Options<TContext = object> {
     /** a object to be append into the send url query parameters */
     query?: Query;
     /**
@@ -94,21 +94,21 @@ interface Options<TContext = object> {
         | undefined;
 }
 
-type IRequestHeaders = {
+export type IRequestHeaders = {
     [header: string]: string | string[];
 } & {
     cookie?: ICookieSet;
 };
 
-type ICookieSet = {
+export type ICookieSet = {
     [name: string]: string;
 };
 
-interface IAuth {
+export interface IAuth {
     build: (header: IHeader) => void;
 }
 
-interface ICookieJar {
+export interface ICookieJar {
     cookie: ICookieSet;
     get empty(): boolean;
     update(cookie: ICookieJar): void;
@@ -126,7 +126,7 @@ interface ICookieJar {
     toString(): string;
 }
 
-type IHeader = {
+export type IHeader = {
     headers: {
         [header: string]: string | string[];
     };
@@ -139,16 +139,16 @@ type IHeader = {
     get(name: string): string | string[];
 };
 
-type BuildHook = (
+export type BuildHook = (
     this: ThisType<IDetails>,
     session: ISession
 ) => ThisType<IDetails>;
 
-interface IDetails<TContext = object> {
+export interface IDetails<TContext = object> {
     build(session: ISession): Promise<Tampermonkey.Request<TContext>>;
 }
 
-interface ISession {
+export interface ISession {
     headers: IHeader;
     cookie: ICookieJar;
 

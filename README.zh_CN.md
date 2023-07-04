@@ -33,6 +33,16 @@ import requests from 'gm-requests'
 requests.get('https://github.com')
 ```
 
+### 本地编写代码，但通过 `@require` 引入？
+如果你用 Webpack 打包代码，在 `webpack.config.js` 中加入如下配置：
+```javascript
+{
+    externals: {
+        'gm-requests': 'requests'
+    }
+}
+```
+
 ## 用法
 ### `requests.get`
 ```typescript

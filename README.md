@@ -38,6 +38,16 @@ import requests from 'gm-requests';
 requests.get('https://github.com');
 ```
 
+### Local Code Writing but Importing via `@require`?
+If you are writing code locally but want to import it using `@require`, you can achieve this by adding the following configuration in your `webpack.config.js` file:
+```javascript
+{
+    externals: {
+        'gm-requests': 'requests'
+    }
+}
+```
+
 ## Usage
 
 ### `requests.get`

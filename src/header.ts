@@ -1,4 +1,5 @@
 import { SimpleCookieJar } from './cookie-jar';
+import type { ICookieJar, IHeader, IRequestHeaders } from './types';
 import { assign } from './utils';
 
 export class Header implements IHeader {
@@ -68,7 +69,7 @@ export class Header implements IHeader {
     }
 
     append(header: string, value: string | string[]): void {
-        if (header === 'cookie') this.cookie.update([header]);
+        if (header === 'cookie') this.cookie.update([].concat(value));
         else if (!this[header]) this[header] = value;
         else if (!Array.isArray(header))
             this[header] = [value].concat(this[header]);

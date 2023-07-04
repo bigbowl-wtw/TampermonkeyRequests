@@ -1,3 +1,4 @@
+import { ICookieJar, ICookieSet } from './types';
 import { assign } from './utils';
 
 type CookieTuple = [string, string];
