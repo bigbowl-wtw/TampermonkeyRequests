@@ -6,32 +6,34 @@
 import Session from './session';
 import type { Url, Query, Options } from './types';
 
-const requests = {
-    get<TResolve = any, TContext = object>(
-        url: Url,
-        query?: Query,
-        options?: Options<TContext>
-    ) {
-        return new Session().get<TResolve, TContext>(url, {
-            query,
-            ...options,
-        });
-    },
+export function get<TResolve = unknown, TContext = object>(
+    url: Url,
+    query?: Query,
+    options?: Options<TContext>
+) {
+    return new Session<TContext>().get<TResolve>(url, {
+        query,
+        ...options,
+    });
+}
 
-    post<TResolve = any, TContext = object>(
-        url: Url,
-        options?: Options<TContext>
-    ) {
-        return new Session().post<TResolve, TContext>(url, {
-            ...options,
-        });
-    },
+export function post<TResolve = unknown, TContext = object>(
+    url: Url,
+    options?: Options<TContext>
+) {
+    return new Session<TContext>().post<TResolve>(url, {
+        ...options,
+    });
+}
 
-    session() {
-        return new Session();
-    },
-};
-
-export default requests;
+export function session() {
+    return new Session();
+}
 
 export { Session };
+
+export default {
+    get,
+    post,
+    session,
+};

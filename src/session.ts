@@ -62,7 +62,7 @@ class Details<TContext = object> implements IDetails<TContext> {
         }
     }
 
-    async build(session: Session): Promise<Tampermonkey.Request<TContext>> {
+    async build(session: ISession): Promise<Tampermonkey.Request<TContext>> {
         // 在 toDetails 中调用 .buildBody，以等待 bulidHooks 完成
         // eslint-disable-next-line prettier/prettier
         this.buildURL()
@@ -86,7 +86,7 @@ class Details<TContext = object> implements IDetails<TContext> {
      *
      * Cookie 优先级：this.header.cookie > this.cookie > session.cookie（与 GM_xhr 保持一致）
      */
-    buildHeaderAndCookie(session: Session): this {
+    buildHeaderAndCookie(session: ISession): this {
         const finalCookie = this.finalHeader.cookie;
         // 处理 cookie
         if (!session.cookie.empty) finalCookie.update(session.cookie);
@@ -99,8 +99,9 @@ class Details<TContext = object> implements IDetails<TContext> {
         return this;
     }
 
-    buildAuth(session: Session): this {
+    buildAuth(session: ISession): this {
         this.pendings.push(session.auth?.build(this.finalHeader));
+        this.pendings.push(this.auth?.build(this.finalHeader));
         return this;
     }
 
@@ -158,7 +159,7 @@ class Details<TContext = object> implements IDetails<TContext> {
     }
 }
 
-export default class Session implements ISession {
+export default class Session<TContext = object> implements ISession {
     headers: IHeader;
     cookie: ICookieJar;
 
@@ -186,27 +187,21 @@ export default class Session implements ISession {
         });
     }
 
-    async get<TResolve = any, TContext = object>(
-        url: Url,
-        options?: Options<TContext>
-    ) {
-        return this.request<TResolve, TContext>('GET', url, options);
+    async get<TResolve = unknown>(url: Url, options?: Options<TContext>) {
+        return this.request<TResolve>('GET', url, options);
     }
 
-    async post<TResolve = any, TContext = object>(
-        url: Url,
-        options?: Options<TContext>
-    ) {
-        return this.request<TResolve, TContext>('POST', url, options);
+    async post<TResolve = unknown>(url: Url, options?: Options<TContext>) {
+        return this.request<TResolve>('POST', url, options);
     }
 
-    async request<TResolve, TContext>(
+    async request<TResolve>(
         method: Method,
         url: Url,
         options?: Options<TContext>
     ) {
         const details = new Details<TContext>(url, method, options);
-        return new Promise<TResolve>((resolve, reject) => {
+        return new Promise<Response<TResolve, TContext>>((resolve, reject) => {
             if (!options.onload) {
                 details.others.onload = resp => {
                     // update cookie from response
@@ -232,3 +227,7 @@ export default class Session implements ISession {
         this.buildHooks.push(hook);
     }
 }
+
+type Response<TResolve, TContext> = TResolve extends unknown
+    ? Tampermonkey.Response<TContext>
+    : TResolve;
