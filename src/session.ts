@@ -187,11 +187,11 @@ export default class Session<TContext = object> implements ISession {
         });
     }
 
-    async get<TResolve = unknown>(url: Url, options?: Options<TContext>) {
+    async get<TResolve = undefined>(url: Url, options?: Options<TContext>) {
         return this.request<TResolve>('GET', url, options);
     }
 
-    async post<TResolve = unknown>(url: Url, options?: Options<TContext>) {
+    async post<TResolve = undefined>(url: Url, options?: Options<TContext>) {
         return this.request<TResolve>('POST', url, options);
     }
 
@@ -228,6 +228,6 @@ export default class Session<TContext = object> implements ISession {
     }
 }
 
-type Response<TResolve, TContext> = TResolve extends unknown
+type Response<TResolve, TContext> = TResolve extends undefined
     ? Tampermonkey.Response<TContext>
     : TResolve;

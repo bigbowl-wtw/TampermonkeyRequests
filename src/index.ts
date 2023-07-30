@@ -6,7 +6,7 @@
 import Session from './session';
 import type { Url, Query, Options } from './types';
 
-export function get<TResolve = unknown, TContext = object>(
+export function get<TResolve = undefined, TContext = object>(
     url: Url,
     query?: Query,
     options?: Options<TContext>
@@ -17,7 +17,7 @@ export function get<TResolve = unknown, TContext = object>(
     });
 }
 
-export function post<TResolve = unknown, TContext = object>(
+export function post<TResolve = undefined, TContext = object>(
     url: Url,
     options?: Options<TContext>
 ) {
