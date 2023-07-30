@@ -26,8 +26,8 @@ export function post<TResolve = undefined, TContext = object>(
     });
 }
 
-export function session() {
-    return new Session();
+export function session<TContext = object>() {
+    return new Session<TContext>();
 }
 
 export { Session };
